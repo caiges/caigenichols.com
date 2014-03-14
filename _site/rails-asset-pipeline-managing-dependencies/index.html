@@ -1,0 +1,24 @@
+<p>After a long week working with Rails in which we use JavaScript extensively I picked up a pattern that had eluded me until today. The premise is &quot;How do you manage dependencies within the pipeline without relying on careful ordering of scripts in the &#39;application.js&#39; manifest?&quot;</p>
+<h2 id="the-problem">The Problem</h2>
+<p>The solution to this problem is described in <a href="http://guides.rubyonrails.org/asset_pipeline.html#manifest-files-and-directives">Rails&#39; Asset Pipeline documentation</a>:</p>
+<blockquote>
+<p>Directives are processed top to bottom, but the order in which files are included by require_tree is unspecified. You should not rely on any particular order among those. If you need to ensure some particular JavaScript ends up above some other in the concatenated file, require the prerequisite file first in the manifest. Note that the family of require directives prevents files from being included twice in the output.</p>
+</blockquote>
+<p>This means if you need &quot;taco.js&quot; before &quot;shrimp.js&quot;, require it in the manifest before the &quot;require_tree&quot; directive.</p>
+<p>Assume we have a file structure like this:</p>
+<pre><code>app/assets/javascripts/application.js
+    app/assets/javascripts/taco.js
+    app/assets/javascripts/shrimp.js
+</code></pre><p><em>app/assets/javascripts/application.js</em></p>
+<pre><code>//= require taco
+//= require_tree .
+</code></pre><p>While this approach works, it can get out of hand very quickly and overall, doesn&#39;t feel right.</p>
+<h2 id="the-solution">The Solution</h2>
+<p>A not so obvious yet simple solution to keeping things tidy is to merely move the dependency to the file that actually needs it.</p>
+<p><em>app/assets/javascripts/shrimp.js</em></p>
+<pre><code>//= require taco
+
+... make the sauce
+</code></pre><p><em>app/assets/javascripts/application.js</em></p>
+<pre><code>//= require shrimp
+</code></pre><p>This ensures that <em>taco.js</em> will be loaded before <em>shrimp.js</em> and keeps the application manifest, <em>application.js</em> nice and clean.</p>

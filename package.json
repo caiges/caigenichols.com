@@ -1,0 +1,30 @@
+{
+  "name": "caigenichols.com",
+  "version": "0.0.0",
+  "description": "My Blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:caiges/caigenichols.com.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "Caige Nichols",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caiges/caigenichols.com/issues"
+  },
+  "homepage": "https://github.com/caiges/caigenichols.com",
+  "dependencies": {
+    "metalsmith": "^0.3.0",
+    "metalsmith-drafts": "0.0.1",
+    "metalsmith-markdown": "^0.2.1",
+    "metalsmith-permalinks": "^0.2.0",
+    "metalsmith-templates": "^0.3.0",
+    "metalsmith-static": "0.0.2"
+  }
+}

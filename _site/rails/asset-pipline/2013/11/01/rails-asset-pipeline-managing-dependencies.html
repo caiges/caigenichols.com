@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Rails Asset Pipeline - Managing dependencies</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/uikit.almost-flat.min.css">
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+      <div class="sidebar">
+        <a href="/">Caige Nichols</a>
+        <br>
+        <strong>WEB CONSTRUCTINEER</strong>
+        <br>
+        <a href="/"><img class="avatar" src="/img/caige.jpg"></a>
+
+        <ul class="nav">
+          <li><a class="extra" href="/">home</a></li>
+          <li><a class="extra" href="/">posts</a></li>
+          <li><a class="extra" href="/about.html">about</a></li>
+        </ul>
+        <div class="contact">
+          <a href="mailto:me@caigenichols.com"><i class="fa fa-envelope"></i></a>
+          <a href="https://github.com/caiges"><i class="fa fa-github"></i></a>
+          <a href="https://twitter.com/caiges"><i class="fa fa-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="content">
+        <h2>Rails Asset Pipeline - Managing dependencies</h2>
+<p class="meta">01 Nov 2013</p>
+
+<div class="post">
+<p>After a long week working with Rails in which we use JavaScript extensively I picked up a pattern that had eluded me until today. The premise is &quot;How do you manage dependencies within the pipeline without relying on careful ordering of scripts in the &#39;application.js&#39; manifest?&quot;</p>
+
+<h2>The Problem</h2>
+
+<p>The solution to this problem is described in <a href="http://guides.rubyonrails.org/asset_pipeline.html#manifest-files-and-directives">Rails&#39; Asset Pipeline documentation</a>:</p>
+
+<blockquote>
+<p>Directives are processed top to bottom, but the order in which files are included by require_tree is unspecified. You should not rely on any particular order among those. If you need to ensure some particular JavaScript ends up above some other in the concatenated file, require the prerequisite file first in the manifest. Note that the family of require directives prevents files from being included twice in the output.</p>
+</blockquote>
+
+<p>This means if you need &quot;taco.js&quot; before &quot;shrimp.js&quot;, require it in the manifest before the &quot;require_tree&quot; directive.</p>
+
+<p>Assume we have a file structure like this:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">app/assets/javascripts/application.js
+    app/assets/javascripts/taco.js
+    app/assets/javascripts/shrimp.js
+</code></pre></div>
+<p><em>app/assets/javascripts/application.js</em></p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">//= require taco
+//= require_tree .
+</code></pre></div>
+<p>While this approach works, it can get out of hand very quickly and overall, doesn&#39;t feel right.</p>
+
+<h2>The Solution</h2>
+
+<p>A not so obvious yet simple solution to keeping things tidy is to merely move the dependency to the file that actually needs it.</p>
+
+<p><em>app/assets/javascripts/shrimp.js</em></p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">//= require taco
+
+... make the sauce
+</code></pre></div>
+<p><em>app/assets/javascripts/application.js</em></p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">//= require shrimp
+</code></pre></div>
+<p>This ensures that <em>taco.js</em> will be loaded before <em>shrimp.js</em> and keeps the application manifest, <em>application.js</em> nice and clean.</p>
+
+</div>
+
+      </div>
+
+      <script src="/js/jquery-2.1.0.min.js"></script>
+      <script src="/js/uikit.min.js"></script>
+    </body>
+</html>
+
